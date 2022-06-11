@@ -4,7 +4,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
     endpoints: builder => ({
         getUsers: builder.query({
             query: () => '/users',
-            keepUnusedDataFor: 5,
+            keepUnusedDataFor: 5,   // keeps data for 5s when out of component. redo query after 5s
         })
     })
 })

@@ -1,7 +1,14 @@
 import { Outlet } from "react-router-dom"
+import TopNav from "./topNav"
 
 const Layout = () => {
-    return <Outlet />
+    return (
+        <>
+            <TopNav />
+            <Outlet />
+        
+        </>
+    )
 }
 
 export default Layout
