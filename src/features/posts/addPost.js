@@ -36,10 +36,20 @@ const AddPost = () => {
       setErrMsg("Image should not be more than 1MB.")
       return
     }
+    console.log([picture]);
+    console.log([process.env.REACT_APP_BACKEND_API_URL]);
+
+    // const formData = new FormData();
+    // formData.append(`title`, title)
+    // formData.append(`description`, textContent)
+    // formData.append(`image_path`, picture)
+
+    // console.log([formData]);
 
     if (canSave) {
       try {
-        await addNewPost({ title, description: textContent, image_path: picture }).unwrap();
+        await addNewPost({ title: title, description: textContent, image_path: picture }).unwrap();
+        // await addNewPost({ formData }).unwrap();
 
         setTitle("");
         setContent("");

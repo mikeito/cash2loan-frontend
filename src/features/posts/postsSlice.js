@@ -62,7 +62,7 @@ export const postsApiSlice = apiSlice.injectEndpoints({
         //** ADD or CREATE NEW POST */
         addNewPost: builder.mutation({
             query: initialPost => ({
-                url: '/posts',
+                url: '/post/save',
                 method: 'POST',
                 body: {
                     ...initialPost,
