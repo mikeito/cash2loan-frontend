@@ -1,9 +1,14 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import NavLinks from "./navbar/navLinks";
+// import { isAuth } from "../app/utils/isAuth";
+import { selectCurrentToken } from "../features/auth/authSlice";
 
 const TopNav = () => {
   const [open, setOpen] = useState(false);
+
+  const token = useSelector(selectCurrentToken)
 
   return (
     <nav className="bg-white border-b-2 border-gray-100">
@@ -93,16 +98,26 @@ const TopNav = () => {
           <Link to="/addpost" className="my-auto hover:text-emerald-500">
             How to post a product?
           </Link>
+          { token == null ? 
+          <>
           <Link to="login" className="my-auto hover:text-emerald-500">
             Sign In
           </Link>
-          {/* button */}
           <Link
             to="register"
             className="hidden md:block p-3 px-6 pt-2 text-white bg-red-600 rounded-lg hover:bg-slate-400"
           >
             Sign Up
           </Link>
+          </>
+          :
+          <Link
+            to="register"
+            className="hidden md:block p-3 px-6 pt-2 text-white bg-red-600 rounded-lg hover:bg-slate-400"
+          >
+            Logout
+          </Link>
+          }
         </div>
 
         {/* mobile menu */}

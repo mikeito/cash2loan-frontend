@@ -10,6 +10,8 @@ const AddPost = () => {
   const [addNewPost, { isLoading }] = useAddNewPostMutation();
   const navigate = useNavigate();
 
+  // get user id here using selector
+
   const titleRef = useRef();
   const errRef = useRef();
 

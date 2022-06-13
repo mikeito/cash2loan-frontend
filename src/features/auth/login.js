@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "./authSlice";
 import { useLoginMutation } from "./authApiSlice";
+import { axiosLogin } from "../../app/utils/axios/allRequests";
 
 const Login = () => {
   const userRef = useRef();
@@ -30,7 +31,8 @@ const Login = () => {
     console.info("Posting data", [user, pwd]);
 
     try {
-      const userData = await login({ user, pwd }).unwrap();
+      // const userData = await login({ user, pwd }).unwrap();
+      const userData = await axiosLogin({ email: user, password: pwd });
       dispatch(setCredentials({ ...userData, user }));
       setUser("");
       setPwd("");

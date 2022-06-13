@@ -117,7 +117,7 @@ const Public = () => {
 
         {/* real content */}
         <section className="flex flex-row gap-3">
-          <div className="bg-red-500 w-full md:w-3/4">
+          <div className="w-full md:w-3/4">
             <div
               className="flex flex-col mx-auto 
                     space-y-4"
@@ -141,8 +141,8 @@ const Public = () => {
                       </div>
                   </div>
                   </div>
-                  <div className="flex-none w-1/5 justify-end">
-                  <button className="py-2 px-8 rounded-md font-medium text-black border border-gray-200 bg-white hover:bg-slate-400">
+                  <div className="flex-none w-1/5">
+                  <button className="py-2 px-8 mt-8 ml-7 rounded-md font-medium text-black border border-gray-200 bg-white hover:bg-slate-400">
                     Button
                   </button>
                   </div>
@@ -151,7 +151,7 @@ const Public = () => {
             </div>
           </div>
           {/* right content */}
-          <div className="bg-green-500 w-1/4 flex flex-col hidden md:block">  {/* add pt-6 */} 
+          <div className="w-1/4 flex flex-col hidden md:block">  {/* add pt-6 */} 
             <h2 className="text-base uppercase text-gray-500">
               trending stories
             </h2>
