@@ -3,6 +3,10 @@ import { setAuthToken } from "./setAuthToken";
 import { sub } from "date-fns";
 
 const userid = 1;
+const config = {
+  // 'content-type': 'multipart/form-data; charset=utf-8; boundary=' + Math.random().toString().substr(2),
+  'content-Type': 'multipart/form-data',
+};
 
 //** POST REQUESTS */
 
@@ -15,11 +19,7 @@ const axiosRegister = async (credentials) => {
 };
 
 const axiosPost = async (incomingData) => {
-  axiosApi.post("/post/save", {
-    ...incomingData,
-    userId: Number(userid), // get this data
-    created_at: new Date().toISOString(),
-  });
+  axiosApi.post("/post", incomingData, config);
 };
 
 //** GET REQUESTS */
@@ -42,7 +42,7 @@ const axiosPostsGet = async (incomingData) => {
 };
 
 const axiosGetSinglePost = async ({ id }) => {
-  axiosApi.get("/posts", {
+  axiosApi.get("/post", {
     params: { id: id },
   });
 };
@@ -50,7 +50,7 @@ const axiosGetSinglePost = async ({ id }) => {
 //** UPDATE REQUESTS */
 
 const axiosPostUpdate = async (incomingData) => {
-  axiosApi.put(`/posts/${incomingData.id}`, {
+  axiosApi.put(`/post/${incomingData.id}`, {
     ...incomingData,
     updated_at: new Date().toISOString(),
   });
@@ -59,7 +59,7 @@ const axiosPostUpdate = async (incomingData) => {
 //** DELETE REQUESTS */
 
 const axiosPostDelete = async ({ id }) => {
-  axiosApi.delete(`/posts/${id}`, {
+  axiosApi.delete(`/post/${id}`, {
     id,
   });
 };

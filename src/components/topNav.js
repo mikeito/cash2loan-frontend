@@ -1,14 +1,21 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import NavLinks from "./navbar/navLinks";
 // import { isAuth } from "../app/utils/isAuth";
-import { selectCurrentToken } from "../features/auth/authSlice";
+import { logOut, selectCurrentToken } from "../features/auth/authSlice";
 
 const TopNav = () => {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
   const token = useSelector(selectCurrentToken)
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    dispatch(logOut());
+    console.log('LOGOUT ---------------');
+  }
 
   return (
     <nav className="bg-white border-b-2 border-gray-100">

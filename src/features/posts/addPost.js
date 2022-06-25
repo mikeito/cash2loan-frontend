@@ -1,13 +1,18 @@
 import { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAddNewPostMutation } from "./postsSlice";
+import { useAddNewPostMutation } from "./postApiSlice";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { axiosPost } from "../../app/utils/axios/allRequests";
+import { selectCurrentUser } from "../auth/authSlice";
 // import { setCredentials } from "./authSlice";
 // import { useLoginMutation } from "./authApiSlice";
 
 const AddPost = () => {
   const [addNewPost, { isLoading }] = useAddNewPostMutation();
+
+  const user = useSelector(selectCurrentUser)
+
   const navigate = useNavigate();
 
   // get user id here using selector
@@ -40,18 +45,28 @@ const AddPost = () => {
     }
     console.log([picture]);
     console.log([process.env.REACT_APP_BACKEND_API_URL]);
+    const userid = 1;
+    const formData = new FormData();
+    const blob = new Blob([picture], {type: picture.type,});
+    formData.append('title', title);
+    formData.append('description', textContent);
+    // formData.append('user_id', Number(user?.id));
+    formData.append('user_id', Number(userid));
+    formData.append('image_path', picture);
+    // formData.append('image_path', blob);
 
-    // const formData = new FormData();
-    // formData.append(`title`, title)
-    // formData.append(`description`, textContent)
-    // formData.append(`image_path`, picture)
+    // console.info([blob]);
 
-    // console.log([formData]);
+    // for (var pair of formData.entries()) {
+    //   console.log(pair[0]+ ', ' + pair[1]); 
+    // }
 
     if (canSave) {
       try {
-        await addNewPost({ title: title, description: textContent, image_path: picture }).unwrap();
+        // await addNewPost({ title: title, description: textContent, image_path: blob }).unwrap();
         // await addNewPost({ formData }).unwrap();
+        // await addNewPost(formData);
+        const postData = await axiosPost(formData);
 
         setTitle("");
         setContent("");
@@ -83,7 +98,7 @@ const AddPost = () => {
           action="#"
           method="POST"
           onSubmit={handleSubmit}
-          enctype="multipart/form-data"
+          encType="multipart/form-data"
         >
           <input type="hidden" name="remember" value="true" />
           <div class="rounded-md space-y-3">

@@ -4,7 +4,7 @@ const axiosApi = axios.create({
     baseURL: process.env.REACT_APP_BACKEND_API_URL,
     withCredentials: false,
     headers: {
-      Accept: "application/json",
+      // Accept: "application/json",
       "Content-Type": "application/json",
     },
   });

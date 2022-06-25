@@ -37,8 +37,8 @@ const Login = () => {
 
     try {
       // const userData = await register({ user, pwd }).unwrap();
-      // await register({ email: user, name: name, password: pwd }).unwrap();
-      await axiosRegister({ email: user, name: name, password: pwd })
+      await register({ email: user, name: name, password: pwd }).unwrap();
+      // await axiosRegister({ email: user, name: name, password: pwd })
       // dispatch(setCredentials({ ...userData, user }));
       setUser("");
       setPwd("");

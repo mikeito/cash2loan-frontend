@@ -2,18 +2,14 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { setCredentials, logOut } from '../../features/auth/authSlice'
 
 const baseQuery = fetchBaseQuery({
-    // baseUrl: process.env.REACT_APP_BACKEND_API_URL,
+    baseUrl: process.env.REACT_APP_BACKEND_API_URL,
     credentials: 'include',
+    tagTypes: ['Post'],
     prepareHeaders: (headers, { getState }) => {
         const token = getState().auth.token
         if (token) {
             headers.set("authorization", `Bearer ${token}`)
         }
-        // else {
-        //     headers.set('Access-Control-Allow-Origin', '*')
-        //     headers.set('Accept', 'application/json')
-        //     headers.set('Content-Type', 'application/json')
-        // }
         return headers
     }
 })

@@ -6,8 +6,21 @@ import reportWebVitals from './reportWebVitals';
 
 import { store } from './app/store'
 import { Provider } from 'react-redux'
+import { postsApiSlice } from './features/posts/postApiSlice';
+import { useDispatch } from "react-redux";
+// import { setPosts } from "./features/posts/postSlice"
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+store.dispatch(postsApiSlice.endpoints.getPosts.initiate);
+// const { status, data, error, refetch } = store.dispatch(postsApiSlice.endpoints.getPosts.initiate);
+// // const dispatch = useDispatch();
+
+// console.log("[[[[[[[[[[[[[[[[[[[[[[[[[[[");
+// console.log([data]);
+// const dispatch = useDispatch();
+
+// const data = dis
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

@@ -31,8 +31,8 @@ const Login = () => {
     console.info("Posting data", [user, pwd]);
 
     try {
-      // const userData = await login({ user, pwd }).unwrap();
-      const userData = await axiosLogin({ email: user, password: pwd });
+      const userData = await login({ email: user, password: pwd }).unwrap();
+      // const userData = await axiosLogin({ email: user, password: pwd });
       dispatch(setCredentials({ ...userData, user }));
       setUser("");
       setPwd("");

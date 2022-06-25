@@ -3,18 +3,18 @@ import { useSelector } from "react-redux";
 import { selectPostById } from "./postsSlice";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { selectAllUsers } from "../users/usersSlice";
+// import { selectAllUsers } from "../users/usersSlice";
 import { useUpdatePostMutation, useDeletePostMutation } from "./postsSlice";
 
 const EditPostForm = () => {
-  const { postId } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const [updatePost, { isLoading }] = useUpdatePostMutation();
   const [deletePost] = useDeletePostMutation();
 
-  const post = useSelector((state) => selectPostById(state, Number(postId)));
-  const users = useSelector(selectAllUsers);
+  const post = useSelector((state) => selectPostById(state, Number(id)));
+  // const users = useSelector(selectAllUsers);
 
   const [title, setTitle] = useState(post?.title);
   const [content, setContent] = useState(post?.body);
@@ -44,7 +44,7 @@ const EditPostForm = () => {
 
         setTitle("");
         setContent("");
-        navigate(`/post/${postId}`);
+        navigate(`/post/${id}`);
       } catch (err) {
         console.error("Failed to save the post", err);
       }
