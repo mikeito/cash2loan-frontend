@@ -2,9 +2,6 @@ import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-import { useDispatch } from "react-redux";
-import { setCredentials } from "./authSlice";
-import { useLoginMutation } from "./authApiSlice";
 import { axiosLogin } from "../../app/utils/axios/allRequests";
 
 const Login = () => {
@@ -15,8 +12,7 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState("");
   const navigate = useNavigate();
 
-  const [login, { isLoading }] = useLoginMutation();
-  const dispatch = useDispatch();
+  let isLoading = true;
 
   useEffect(() => {
     userRef.current.focus();
@@ -31,9 +27,9 @@ const Login = () => {
     console.info("Posting data", [user, pwd]);
 
     try {
-      const userData = await login({ email: user, password: pwd }).unwrap();
-      // const userData = await axiosLogin({ email: user, password: pwd });
-      dispatch(setCredentials({ ...userData, user }));
+      // const userData = await login({ email: user, password: pwd }).unwrap();
+      // // const userData = await axiosLogin({ email: user, password: pwd });
+      // dispatch(setCredentials({ ...userData, user }));
       setUser("");
       setPwd("");
       navigate("/welcome");

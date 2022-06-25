@@ -1,8 +1,6 @@
 import axiosApi from "./axiosConfig";
-import { setAuthToken } from "./setAuthToken";
 import { sub } from "date-fns";
 
-const userid = 1;
 const config = {
   // 'content-type': 'multipart/form-data; charset=utf-8; boundary=' + Math.random().toString().substr(2),
   'content-Type': 'multipart/form-data',
@@ -10,47 +8,40 @@ const config = {
 
 //** POST REQUESTS */
 
-const axiosLogin = async (credentials) => {
-  axiosApi.post("/login", credentials);
+const refreshAccessToken = async () => {
+  const response = await axiosApi.get("/refresh");
+  return response.data;
 };
 
-const axiosRegister = async (credentials) => {
-  axiosApi.post("/user/save", credentials);
+const login = async (credentials) => {
+  return await axiosApi.post("/login", credentials, {withCredentials: true,});
 };
 
-const axiosPost = async (incomingData) => {
-  axiosApi.post("/post", incomingData, config);
+const register = async (credentials) => {
+  return await axiosApi.post("/user/save", credentials);
+};
+
+const addPost = async (incomingData) => {
+  return await axiosApi.post("/post", incomingData, config);
 };
 
 //** GET REQUESTS */
 
-const axiosPostsGet = async (incomingData) => {
-  axiosApi.get("/posts", {
-    transformResponse: [
-      (responseData) => {
-        let min = 1;
-        const loadedPosts = responseData.map((post) => {
-          if (!post?.created_at)
-            post.date = sub(new Date(), { minutes: min++ }).toISOString();
-
-          return post;
-        });
-        // return postsAdapter.setAll(initialState, loadedPosts)
-      },
-    ],
-  });
+const getPosts = async () => {
+  const response = await axiosApi.get("/posts");
+  return response.data;
 };
 
-const axiosGetSinglePost = async ({ id }) => {
-  axiosApi.get("/post", {
+const getSinglePost = async ({ id }) => {
+  return await axiosApi.get("/post", {
     params: { id: id },
   });
 };
 
 //** UPDATE REQUESTS */
 
-const axiosPostUpdate = async (incomingData) => {
-  axiosApi.put(`/post/${incomingData.id}`, {
+const updatePost = async (incomingData) => {
+  return await axiosApi.patch(`/post/${incomingData.id}`, {
     ...incomingData,
     updated_at: new Date().toISOString(),
   });
@@ -58,18 +49,34 @@ const axiosPostUpdate = async (incomingData) => {
 
 //** DELETE REQUESTS */
 
-const axiosPostDelete = async ({ id }) => {
+const deletePost = async ({ id }) => {
   axiosApi.delete(`/post/${id}`, {
     id,
   });
 };
 
+//** INTERCEPTOR */ 
+axiosApi.interceptors.response.use(
+  (response) => { return response; },
+  async (error) => {
+    const originalRequest = error.config;
+
+    if(error?.response?.status === 403) {
+      console.log('sending refresh token')
+      await refreshAccessToken();
+      return axiosApi(originalRequest);
+    }
+    return Promise.reject(error);
+  }
+)
+
 export {
-  axiosLogin,
-  axiosRegister,
-  axiosPost,
-  axiosPostsGet,
-  axiosGetSinglePost,
-  axiosPostUpdate,
-  axiosPostDelete,
+  refreshAccessToken,
+  login,
+  register,
+  addPost,
+  getPosts,
+  getSinglePost,
+  updatePost,
+  deletePost,
 };

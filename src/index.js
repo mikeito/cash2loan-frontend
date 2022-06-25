@@ -4,35 +4,36 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import { store } from './app/store'
-import { Provider } from 'react-redux'
-import { postsApiSlice } from './features/posts/postApiSlice';
-import { useDispatch } from "react-redux";
-// import { setPosts } from "./features/posts/postSlice"
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-store.dispatch(postsApiSlice.endpoints.getPosts.initiate);
-// const { status, data, error, refetch } = store.dispatch(postsApiSlice.endpoints.getPosts.initiate);
-// // const dispatch = useDispatch();
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 
-// console.log("[[[[[[[[[[[[[[[[[[[[[[[[[[[");
-// console.log([data]);
-// const dispatch = useDispatch();
-
-// const data = dis
+const queryClient = new QueryClient()
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
+//   <React.StrictMode>
+//       <BrowserRouter>
+//       <QueryClientProvider client={queryClient}>
+//         <Routes>
+//           <Route path="/*" element={<App />} />
+//         </Routes>
+//         <ReactQueryDevtools initialIsOpen />
+//         </QueryClientProvider>
+//       </BrowserRouter>
+// </React.StrictMode>
+
   <React.StrictMode>
-  <Provider store={store}>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/*" element={<App />} />
-      </Routes>
-    </BrowserRouter>
-  </Provider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/*" element={<App />} />
+        </Routes>
+      </BrowserRouter>
+      <ReactQueryDevtools initialIsOpen="{false}" />
+    </QueryClientProvider>
 </React.StrictMode>
 );
 

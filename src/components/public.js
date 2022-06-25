@@ -1,36 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useGetPostsQuery, selectPostIds, selectAllPosts } from "../features/posts/postSlice";
 import PostList from "../features/posts/postList";
-import { useSelector } from "react-redux";
 
 const Public = () => {
-  // const [data, setData] = useState();
-  // const {data, isError, isSuccess, error, isLoading} = useGetPostsQuery();
 
-  // const posts = useSelector((state) => selectAllPosts(state, null))
-
-  console.log("Public lllllllllllllllll");
-  // console.log([posts]);
-
-  // const orderedPostIds = useSelector(selectPostIds);
-
-  // console.log("++++++++");
-  // console.log([orderedPostIds]);
-  
-  // console.log([data]);
-  // console.error([error]);
-  // console.info([isLoading]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const postdata = await getPosts() ;
-  //     setData(postdata);
-  //   }
-  //   // const postdata = await getPosts() ;
-  //   fetchData()
-    
-  // }, []);
 
   const content = (
     <section className="public">

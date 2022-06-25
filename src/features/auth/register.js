@@ -1,10 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-import { useDispatch } from "react-redux";
-import { setCredentials } from "./authSlice";
-import { useLoginMutation, useRegisterMutation } from "./authApiSlice";
-
 import { axiosRegister } from "../../app/utils/axios/allRequests"
 
 const Login = () => {
@@ -17,8 +13,7 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState("");
   const navigate = useNavigate();
 
-  const [register, { isLoading }] = useRegisterMutation();
-  const dispatch = useDispatch();
+  let isLoading = true;
 
   useEffect(() => {
     userRef.current.focus();
@@ -37,7 +32,7 @@ const Login = () => {
 
     try {
       // const userData = await register({ user, pwd }).unwrap();
-      await register({ email: user, name: name, password: pwd }).unwrap();
+      // await register({ email: user, name: name, password: pwd }).unwrap();
       // await axiosRegister({ email: user, name: name, password: pwd })
       // dispatch(setCredentials({ ...userData, user }));
       setUser("");

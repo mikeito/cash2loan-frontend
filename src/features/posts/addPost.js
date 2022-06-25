@@ -1,21 +1,21 @@
 import { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAddNewPostMutation } from "./postApiSlice";
+import { useMutation, useQueryClient } from "react-query";
 
-import { useDispatch, useSelector } from "react-redux";
-import { axiosPost } from "../../app/utils/axios/allRequests";
-import { selectCurrentUser } from "../auth/authSlice";
-// import { setCredentials } from "./authSlice";
-// import { useLoginMutation } from "./authApiSlice";
+import { addPost } from "../../app/utils/axios/allRequests";
 
 const AddPost = () => {
-  const [addNewPost, { isLoading }] = useAddNewPostMutation();
-
-  const user = useSelector(selectCurrentUser)
-
   const navigate = useNavigate();
 
-  // get user id here using selector
+  const queryClient = useQueryClient()
+
+  // Mutations
+  const addPostMutation = useMutation(addPost, {
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries('posts')
+    },
+  })
 
   const titleRef = useRef();
   const errRef = useRef();
@@ -25,15 +25,17 @@ const AddPost = () => {
   const [picture, setImage] = useState(null);
   const [errMsg, setErrMsg] = useState("");
 
+  // let isLoading = true;
+
   useEffect(() => {
     titleRef.current.focus();
   }, []);
-
+  
   useEffect(() => {
     setErrMsg("");
   }, [title, textContent, picture]);
 
-  const canSave = [title, textContent, picture].every(Boolean) && !isLoading;
+  const canSave = [title, textContent, picture].every(Boolean) && !addPostMutation.isLoading;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,11 +45,9 @@ const AddPost = () => {
       setErrMsg("Image should not be more than 1MB.")
       return
     }
-    console.log([picture]);
-    console.log([process.env.REACT_APP_BACKEND_API_URL]);
     const userid = 1;
     const formData = new FormData();
-    const blob = new Blob([picture], {type: picture.type,});
+    // const blob = new Blob([picture], {type: picture.type,});
     formData.append('title', title);
     formData.append('description', textContent);
     // formData.append('user_id', Number(user?.id));
@@ -55,18 +55,13 @@ const AddPost = () => {
     formData.append('image_path', picture);
     // formData.append('image_path', blob);
 
-    // console.info([blob]);
-
     // for (var pair of formData.entries()) {
     //   console.log(pair[0]+ ', ' + pair[1]); 
     // }
 
     if (canSave) {
       try {
-        // await addNewPost({ title: title, description: textContent, image_path: blob }).unwrap();
-        // await addNewPost({ formData }).unwrap();
-        // await addNewPost(formData);
-        const postData = await axiosPost(formData);
+        addPostMutation.mutate(formData)
 
         setTitle("");
         setContent("");
@@ -82,7 +77,7 @@ const AddPost = () => {
   const handlePwdInput = (e) => setContent(e.target.value);
   const handleImageInput = (e) => setImage(e.target.files[0]);
 
-  const content = isLoading ? (
+  const content = addPostMutation.isLoading ? (
     <h1>Loading...</h1>
   ) : (
     <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

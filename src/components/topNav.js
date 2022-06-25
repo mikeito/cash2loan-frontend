@@ -1,19 +1,14 @@
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import NavLinks from "./navbar/navLinks";
-// import { isAuth } from "../app/utils/isAuth";
-import { logOut, selectCurrentToken } from "../features/auth/authSlice";
 
 const TopNav = () => {
-  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  let token = true;
 
-  const token = useSelector(selectCurrentToken)
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    dispatch(logOut());
     console.log('LOGOUT ---------------');
   }
 
@@ -105,7 +100,7 @@ const TopNav = () => {
           <Link to="/addpost" className="my-auto hover:text-emerald-500">
             How to post a product?
           </Link>
-          { token == null ? 
+          { token ? 
           <>
           <Link to="login" className="my-auto hover:text-emerald-500">
             Sign In

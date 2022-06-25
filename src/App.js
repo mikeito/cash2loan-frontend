@@ -7,7 +7,6 @@ import Register from "./features/auth/register";
 import AddPost from "./features/posts/addPost";
 import Welcome from "./features/auth/welcome";
 import RequireAuth from "./features/auth/requireAuth";
-import UsersList from "./features/users/usersList";
 import SinglePostPage from "./features/posts/singlePost";
 // import EditPostForm from "./features/posts/editPost";
 
@@ -26,7 +25,6 @@ function App() {
         {/* protected routes */}
         <Route element={<RequireAuth />}>
           <Route path="welcome" element={<Welcome />} />
-          <Route path="userslist" element={<UsersList />} />
         </Route>
       </Route>
     </Routes>
