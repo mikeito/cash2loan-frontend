@@ -14,17 +14,6 @@ const queryClient = new QueryClient()
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-//   <React.StrictMode>
-//       <BrowserRouter>
-//       <QueryClientProvider client={queryClient}>
-//         <Routes>
-//           <Route path="/*" element={<App />} />
-//         </Routes>
-//         <ReactQueryDevtools initialIsOpen />
-//         </QueryClientProvider>
-//       </BrowserRouter>
-// </React.StrictMode>
-
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>

@@ -8,7 +8,7 @@ import AddPost from "./features/posts/addPost";
 import Welcome from "./features/auth/welcome";
 import RequireAuth from "./features/auth/requireAuth";
 import SinglePostPage from "./features/posts/singlePost";
-// import EditPostForm from "./features/posts/editPost";
+import EditPostForm from "./features/posts/editPost";
 
 function App() {
   return (
@@ -18,14 +18,17 @@ function App() {
         <Route index element={<Public />} />
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
-        <Route path="addpost" element={<AddPost />} />
-        <Route path="post/:id" element={<SinglePostPage />} />
-        {/* <Route path="post/edit/:id" element={<EditPostForm />} /> */}
-
         {/* protected routes */}
         <Route element={<RequireAuth />}>
-          <Route path="welcome" element={<Welcome />} />
+          <Route path="addpost" element={<AddPost />} />
+          <Route path="post/:id" element={<SinglePostPage />} />
+          <Route path="post/edit/:id" element={<EditPostForm />} />
         </Route>
+
+        {/* protected routes */}
+        {/* <Route element={<RequireAuth />}>
+          <Route path="welcome" element={<Welcome />} />
+        </Route> */}
       </Route>
     </Routes>
   );

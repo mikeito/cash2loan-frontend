@@ -1,7 +1,11 @@
 import { useRef, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useMutation, useQueryClient } from "react-query";
+import Loading from "../../components/loading";
+import userStore from "../../app/store/userStore";
+import { storage } from "../../app/utils/local";
 
-import { axiosRegister } from "../../app/utils/axios/allRequests"
+import { register, login } from "../../app/utils/axios/allRequests"
 
 const Login = () => {
   const userRef = useRef();
@@ -13,7 +17,29 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState("");
   const navigate = useNavigate();
 
-  let isLoading = true;
+  const set_user = userStore((state) => state.setUser)
+
+  const { isLoading: loginLoading, mutate: mutateLogin } = useMutation(login, {
+    onSuccess: ({ data }) => {
+      storage.setToken(data.access_token)
+      storage.setRefreshToken(data.refresh_token)
+      set_user(data.user)
+      navigate("/")
+    },
+  })
+
+  const registerMutation = useMutation(register, {
+    onSuccess: ({ data }) => {
+      console.log("///////////////////");
+      console.log(data);
+      const formLogin = new FormData();
+      formLogin.append('email', data.email);
+      formLogin.append('password', pwd);
+      // Login Executed
+      mutateLogin(formLogin)
+    },
+
+  })
 
   useEffect(() => {
     userRef.current.focus();
@@ -31,13 +57,13 @@ const Login = () => {
     }
 
     try {
-      // const userData = await register({ user, pwd }).unwrap();
-      // await register({ email: user, name: name, password: pwd }).unwrap();
-      // await axiosRegister({ email: user, name: name, password: pwd })
-      // dispatch(setCredentials({ ...userData, user }));
+      // Registration executed
+      registerMutation.mutate({ email: user, name: name, password: pwd })
+      setName("")
       setUser("");
       setPwd("");
-      navigate("/login");
+      setConfPwd("")
+      // navigate("/login");
     } catch (err) {
       if (!err?.originalStatus) {
         // isLoading: true until timeout occurs
@@ -62,8 +88,8 @@ const Login = () => {
 
   const handleConfPwdInput = (e) => setConfPwd(e.target.value);
 
-  const content = isLoading ? (
-    <h1>Loading...</h1>
+  const content = registerMutation.isLoading || loginLoading ? (
+    <Loading />
   ) : (
     <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div class="max-w-md w-full space-y-8">

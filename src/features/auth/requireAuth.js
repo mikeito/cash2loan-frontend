@@ -1,7 +1,8 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom"
+import { storage } from "../../app/utils/local"
 
 const RequireAuth = () => {
-    const token = true
+    const token = storage.getToken()
     const location = useLocation()
 
     return (

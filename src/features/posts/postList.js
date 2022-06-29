@@ -10,9 +10,10 @@ const PostList = () => {
   const {
     data: posts,
     isLoading,
+    isRefetching,
     isError,
     error,
-  } = useQuery("posts", getPosts);
+  } = useQuery("posts", getPosts, {retry: 3,});
 
   // let isLoading = true
   // let isError = false
@@ -24,7 +25,7 @@ const PostList = () => {
 
   let displayPost;
 
-  if (isLoading) {
+  if (isLoading || isRefetching) {
     <div class="text-center">
       <svg
         role="status"
@@ -42,25 +43,25 @@ const PostList = () => {
           fill="currentFill"
         />
       </svg>
-    </div>;
+    </div>
   } else if (isError) {
     <div className="text-red-600 font-extrabold">{error}</div>;
   } else {
     displayPost = posts?.map(({id, title, image_path}, index) => {
       return (
-          <div key={index} class="flex flex-row mb-4 bg-slate-100 rounded-xl md:p-0 dark:bg-slate-800">
+          <div key={index} class="flex flex-row mb-4 rounded-xl md:p-0 dark:bg-slate-800">
             <div className="flex flex-row shrink w-4/5">
               <Link to={"/post/" + id}>
                 <img
-                  class="w-28 h-28 md:w-48 rounded-lg"
+                  class="w-20 h-20 md:w-28 rounded-md"
                   src={domain.origin + "/" + image_path}
                   alt=""
                 />
               </Link>
-              <div class="my-auto text-left ml-2 space-y-1">
-                <h2 className="text-lg font-bold">{title}</h2>
+              <div class="text-left ml-2 space-y-1">
+                <h2 className="text-lg capitalize font-semibold text-gray-700">{title}</h2>
 
-                <div class="text-sm font-normal">
+                <div class="text-sm text-gray-500">
                   {" "}
                   {/* truncate */}
                   If time is most precious, this collection of lifehacks is so
@@ -68,9 +69,9 @@ const PostList = () => {
                 </div>
               </div>
             </div>
-            <div className="flex-none w-1/5">
-              <button className="py-2 px-8 mt-8 ml-7 rounded-md font-medium text-black border border-gray-200 bg-white hover:bg-slate-400">
-                Button
+            <div className="flex items-stretch">
+              <button className="py-2 px-8 self-center rounded-md font-medium text-gray-600 border border-gray-200 bg-white hover:bg-slate-400">
+                Follow
               </button>
             </div>
           </div>

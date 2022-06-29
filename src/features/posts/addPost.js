@@ -1,11 +1,13 @@
 import { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
+import userStore from "../../app/store/userStore";
 
 import { addPost } from "../../app/utils/axios/allRequests";
 
 const AddPost = () => {
   const navigate = useNavigate();
+  const user = userStore((state) => state.user)
 
   const queryClient = useQueryClient()
 
@@ -45,13 +47,13 @@ const AddPost = () => {
       setErrMsg("Image should not be more than 1MB.")
       return
     }
-    const userid = 1;
+    // const userid = 1;
     const formData = new FormData();
     // const blob = new Blob([picture], {type: picture.type,});
     formData.append('title', title);
     formData.append('description', textContent);
     // formData.append('user_id', Number(user?.id));
-    formData.append('user_id', Number(userid));
+    formData.append('email', user?.username)
     formData.append('image_path', picture);
     // formData.append('image_path', blob);
 
@@ -133,6 +135,7 @@ const AddPost = () => {
                 <span class="sr-only">Choose File</span>
                 <input
                   type="file"
+                  required
                   onChange={handleImageInput}
                   class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                 />

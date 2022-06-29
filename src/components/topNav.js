@@ -1,15 +1,25 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import NavLinks from "./navbar/navLinks";
+import userStore from "../app/store/userStore";
+import { storage } from "../app/utils/local";
 
 const TopNav = () => {
   const [open, setOpen] = useState(false);
-  let token = true;
+  const user = userStore((state) => state.user)
+  const removeUser = userStore((state) => state.clearUser)
+  const navigate = useNavigate();
+  // let token = true;
 
 
   const handleLogout = async (e) => {
     e.preventDefault();
+    removeUser();
+    storage.clearToken();
+    storage.clearRefreshToken();
     console.log('LOGOUT ---------------');
+    navigate('/')
+
   }
 
   return (
@@ -70,24 +80,24 @@ const TopNav = () => {
             </div>
             <input
               type="text"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Search topics"
+              class="bg-teal-50 border border-gray-100 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Search Product Hunt"
               required
             />
           </div>
-          <Link to="#" className="hover:text-emerald-500 my-auto hidden md:block">
+          <Link to="#" className="hover:text-emerald-500 text-gray-600 font-normal my-auto hidden md:block">
             Products
           </Link>
-          <Link to="#" className="hover:text-emerald-500 my-auto hidden md:block">
+          <Link to="#" className="hover:text-emerald-500 text-gray-600 font-normal my-auto hidden md:block">
             Community
           </Link>
-          <Link to="#" className="hover:text-emerald-500 my-auto hidden md:block">
+          <Link to="#" className="hover:text-emerald-500 text-gray-600 font-normal my-auto hidden md:block">
             Tools
           </Link>
-          <Link to="#" className="hover:text-emerald-500 my-auto hidden md:block">
+          <Link to="#" className="hover:text-emerald-500 text-gray-600 font-normal my-auto hidden md:block">
             Jobs
           </Link>
-          <Link to="#" className="hover:text-emerald-500 my-auto hidden md:block">
+          <Link to="#" className="hover:text-emerald-500 text-gray-600 font-normal my-auto hidden md:block">
             About
           </Link>
 
@@ -97,17 +107,17 @@ const TopNav = () => {
         </div>
         {/* menu item */}
         <div className="hidden md:flex space-x-4">
-          <Link to="/addpost" className="my-auto hover:text-emerald-500">
+          <Link to="/addpost" className="my-auto hover:text-emerald-500 text-gray-600 font-normal">
             How to post a product?
           </Link>
-          { token ? 
+          { user == null ? 
           <>
-          <Link to="login" className="my-auto hover:text-emerald-500">
+          <Link to="login" className="my-auto hover:text-emerald-500 text-gray-600 font-normal">
             Sign In
           </Link>
           <Link
             to="register"
-            className="hidden md:block p-3 px-6 pt-2 text-white bg-red-600 rounded-lg hover:bg-slate-400"
+            className="hidden md:block py-2  px-4 text-white bg-orange-500 rounded-md hover:bg-slate-400"
           >
             Sign Up
           </Link>
@@ -115,9 +125,10 @@ const TopNav = () => {
           :
           <Link
             to="register"
+            onClick={handleLogout}
             className="hidden md:block p-3 px-6 pt-2 text-white bg-red-600 rounded-lg hover:bg-slate-400"
           >
-            Logout
+            Logout {user?.username}
           </Link>
           }
         </div>

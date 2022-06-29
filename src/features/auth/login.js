@@ -2,7 +2,12 @@ import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-import { axiosLogin } from "../../app/utils/axios/allRequests";
+import { login } from "../../app/utils/axios/allRequests";
+
+import { useMutation } from "react-query";
+import userStore from "../../app/store/userStore";
+import { storage } from "../../app/utils/local";
+import Loading from "../../components/loading";
 
 const Login = () => {
   const userRef = useRef();
@@ -10,9 +15,35 @@ const Login = () => {
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
+
+  // const { mutateAsync, isLoading } = useMutation(login)
+  const set_user = userStore((state) => state.setUser);
   const navigate = useNavigate();
 
-  let isLoading = true;
+  // let isLoading = false;
+
+  const loginMutation = useMutation(login, {
+    onSuccess: ({ data }) => {
+      storage.setToken(data.access_token);
+      storage.setRefreshToken(data.refresh_token);
+      set_user(data.user);
+      console.log("Logggiiiiiiig");
+      console.log(data);
+      navigate("/");
+    },
+    onError: ({response}) => {
+      if (!response?.data.status) {
+        setErrMsg("No Server Response");
+      } else if (response?.data.status === 400) {
+        setErrMsg("Missing Username or Password");
+      } else if (response?.data.status === 401) {
+        setErrMsg("Unauthorized. Wrong email or password");
+      } else {
+        setErrMsg("Login Failed");
+      }
+
+    }
+  });
 
   useEffect(() => {
     userRef.current.focus();
@@ -26,13 +57,15 @@ const Login = () => {
     e.preventDefault();
     console.info("Posting data", [user, pwd]);
 
+    const formData = new FormData();
+    formData.append("email", user);
+    formData.append("password", pwd);
+    loginMutation.mutate(formData);
+
     try {
-      // const userData = await login({ email: user, password: pwd }).unwrap();
-      // // const userData = await axiosLogin({ email: user, password: pwd });
-      // dispatch(setCredentials({ ...userData, user }));
+      loginMutation.mutate(formData);
       setUser("");
       setPwd("");
-      navigate("/welcome");
     } catch (err) {
       if (!err?.originalStatus) {
         // isLoading: true until timeout occurs
@@ -52,17 +85,12 @@ const Login = () => {
 
   const handlePwdInput = (e) => setPwd(e.target.value);
 
-  const content = isLoading ? (
-    <h1>Loading...</h1>
+  const content = loginMutation.isLoading ? (
+    <Loading />
   ) : (
     <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div class="max-w-md w-full space-y-8">
         <div>
-          <img
-            class="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-            alt="Workflow"
-          />
           <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
@@ -72,13 +100,25 @@ const Login = () => {
               to="/register"
               class="font-medium text-indigo-600 hover:text-indigo-500"
             >
-                {" "}
+              {" "}
               Register into the app
             </Link>
           </p>
-          <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
+          <p
+            ref={errRef}
+            className={
+              errMsg ? "block text-center text-red-600 font-bold" : "hidden"
+            }
+          >
+            {errMsg}
+          </p>{" "}
         </div>
-        <form class="mt-8 space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
+        <form
+          class="mt-8 space-y-6"
+          action="#"
+          method="POST"
+          onSubmit={handleSubmit}
+        >
           <input type="hidden" name="remember" value="true" />
           <div class="rounded-md shadow-sm -space-y-px">
             <div>
